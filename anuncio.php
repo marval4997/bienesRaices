@@ -4,7 +4,7 @@ if(empty($_GET['id']) or !filter_var($_GET['id'], FILTER_VALIDATE_INT)){
 }
 
 $id=$_GET['id'];
-require 'includes/config/database.php';
+require './includes/app.php';
 
 $conexion = conectarDB();
 $query = "SELECT * FROM propiedades WHERE id=$id ";
@@ -16,7 +16,6 @@ $anuncio=mysqli_fetch_assoc($anuncio);
 
 
 
-require './includes/funciones.php';
 incluirTemplete('header');
 ?>
 

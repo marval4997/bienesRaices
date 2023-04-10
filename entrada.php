@@ -1,5 +1,5 @@
 <?php
-require './includes/funciones.php';
+require './includes/app.php';
 incluirTemplete('header');
 ?>
 <main class="contenedor seccion contenido-centrado">

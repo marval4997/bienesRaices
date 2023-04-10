@@ -1,6 +1,6 @@
 <?php
 //Autenticar el usuario
-require 'includes/config/database.php';
+require 'includes/app.php';
 $conexion = conectarDB();
 $errores = [];
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 }
 
 //incluye el header
-require './includes/funciones.php';
+
 incluirTemplete('header');
 ?>
 

@@ -1,6 +1,4 @@
 <?php
-require __DIR__ . '/../config/database.php';
-
 $conexion = conectarDB();
 $query = "";
 if ($_SERVER['SCRIPT_NAME'] == "/index.php") {

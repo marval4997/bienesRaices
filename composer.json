@@ -1,0 +1,17 @@
+{
+    "name": "margarito/bienesraices",
+    "description": "Creando proyecto con POO",
+    "type": "projet",
+    "authors": [
+        {
+            "name": "marval4997",
+            "email": "margarito4997@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "./class"
+        }
+    }
+}

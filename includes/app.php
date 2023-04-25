@@ -3,12 +3,13 @@ require 'funciones.php';
 require 'config/database.php';
 require __DIR__. '/../vendor/autoload.php';
 
-use App\Propiedad;
+//Conectanos a la base de datos
+$db= conectarDB();
+use App\ActiveRecord;
+//use Intervention\Image\ImageManager as Image;
 
-$propieda=new Propiedad;
-
-var_dump($propieda);
-
+ActiveRecord::setDB($db);
+//$imagen =Image::make($_FILES['imagen']['tmp_name']);
 
 
 

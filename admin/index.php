@@ -1,19 +1,17 @@
 <?php
-require '../includes/funciones.php';
-
-$auth =estadoAuntenticado();
-
-if(!$auth){
-    header('Location: /');
-}
+require '../includes/app.php';
+use App\Propiedad;
+use App\Vendedor;
+estadoAuntenticado();
 
 //importar la conexion
-require '../includes/config/database.php';
-$conexion= conectarDB();
-//escribir la consulta
-$query = "SELECT * FROM propiedades";
-//consultar la bd
-$resultadoPropiedades=mysqli_query($conexion,$query);
+
+//Consultar para tener vendedores
+$propiedades= Propiedad::all();
+$vendedores= Vendedor::all();
+
+//debug($propiedades);
+//debug($propiedades);
 
 //Muestra mensaje condicional
 $mensaje = $_GET['mensaje'] ?? null;
@@ -22,23 +20,15 @@ $mensaje = $_GET['mensaje'] ?? null;
 if($_SERVER['REQUEST_METHOD']=="POST"){
     $id=$_POST['id'];
     $id=filter_var($id, FILTER_VALIDATE_INT);
-
-    if($id){
-
-        $query="SELECT imagen FROM propiedades WHERE id=$id ";
-        $resultado=mysqli_query($conexion,$query);
-        $imagen=mysqli_fetch_assoc($resultado);
-
-        echo $imagen['imagen'];
-        $carpetaImagenes = '../imagenes/';
-        unlink($carpetaImagenes.$imagen['imagen']);
-
-        //elimina propiedad
-        $query="DELETE FROM propiedades WHERE id=$id";
-        $resultado=mysqli_query($conexion,$query);
-
-        if($resultado){
-            header('Location: /admin?mensaje=3');
+    $tipo=$_POST['tipo'];
+    
+    if(validarTipoContenido($tipo)){
+        if($tipo == 'vendedor'){
+            $vendedores=Vendedor::find($id);
+            $vendedores->eliminar();
+        }elseif($tipo == 'propiedad'){
+            $propiedad=Propiedad::find($id);
+            $propiedad->eliminar();
         }
     }
 
@@ -52,21 +42,17 @@ incluirTemplete('header')
 
 <main class="contenedor seccion">
     <h1>Administrador de bienes raíces</h1>
-    <?php if ($mensaje ==1) : ?>
-        <p class="alerta exito"> <?php echo "Registro Exitoso"; ?> </p>
+    <?php if (!empty($mensaje)) : ?>
+        <p class="alerta exito"> <?php echo s(notificaciones($mensaje)); ?> </p>
     <?php endif ?>
 
-    <?php if ($mensaje ==2) : ?>
-        <p class="alerta exito"> <?php echo "Actualización Exitosa"; ?> </p>
-    <?php endif ?>
-
-    <?php if ($mensaje ==3) : ?>
-        <p class="alerta exito"> <?php echo "Registro eliminado"; ?> </p>
-    <?php endif ?>
+    
 
 
     <a href="/admin/propiedades/crear.php" class="boton boton-verde">Nueva Propiedad</a>
+    <a href="/admin/vendedores/crear.php" class="boton boton-amarillo">Nuev@ vendedor</a>
 
+    <h2>Propiedades</h2>
 
     <table class="propiedades">
         <thead>
@@ -80,23 +66,55 @@ incluirTemplete('header')
         </thead>
 
         <tbody>
-            <?php while($row= mysqli_fetch_assoc($resultadoPropiedades)): ?>
+            <?php foreach($propiedades as $propiedad) : ?>
             <tr>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['titulo']; ?></td>
+                <td><?php echo $propiedad->id; ?></td>
+                <td><?php echo $propiedad->titulo; ?></td>
                 <td>
-                    <img class="imagen-tabla" src="/imagenes/<?php echo $row['imagen']; ?>" alt="imagen propiedad">
+                    <img class="imagen-tabla" src="/imagenes/<?php echo $propiedad->imagen; ?>" alt="imagen propiedad">
                 </td>
-                <td><?php echo $row['precio']; ?></td>
+                <td><?php echo $propiedad->precio; ?></td>
                 <td>
                     <form class="w-100"  method="POST" >
-                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                    <input type="hidden" name="tipo" value="propiedad">
+                        <input type="hidden" name="id" value="<?php echo $propiedad->id; ?>">
                         <input class="boton-rojo-block" type="submit" value="Eliminar">
                     </form>
-                    <a href="propiedades/actualizar.php?id=<?php echo $row['id']; ?>" class="boton-amarillo-block">Actualizar</a>
+                    <a href="propiedades/actualizar.php?id=<?php echo$propiedad->id; ?>" class="boton-amarillo-block">Actualizar</a>
                 </td>
             </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2>vendedores</h2>
+
+    <table class="propiedades">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach($vendedores as $vendedor) : ?>
+            <tr>
+                <td><?php echo $vendedor->id; ?></td>
+                <td><?php echo $vendedor->nombre. " ".$vendedor->apellido; ?></td>
+                <td><?php echo $vendedor->telefono; ?></td>
+                <td>
+                    <form class="w-100"  method="POST" >
+                    <input type="hidden" name="tipo" value="vendedor">
+                        <input type="hidden" name="id" value="<?php echo $vendedor->id; ?>">
+                        <input class="boton-rojo-block" type="submit" value="Eliminar">
+                    </form>
+                    <a href="vendedores/actualizar.php?id=<?php echo$vendedor->id; ?>" class="boton-amarillo-block">Actualizar</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 
@@ -106,7 +124,7 @@ incluirTemplete('header')
 </main>
 
 <?php
-//cerrar la conexion
-mysqli_close($conexion);
+
+
 incluirTemplete('footer');
 ?>

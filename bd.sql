@@ -1,7 +1,7 @@
 CREATE DATABASE BD_bienesRices;
 SHOW DATABASES;
 
-USE BD_bienesRices;
+USE BD_bienesRaices;
 SELECT * FROM vendedores;
 
 USE BD_bienesRices;
@@ -13,7 +13,9 @@ CREATE TABLE vendedores(
     CONSTRAINT pk_vendedores PRIMARY KEY(id)
 )
 USE BD_bienesRices;
-INSERT INTO vendedores(nombre, apellido, telefono) VALUES('Karen', 'Perez', '7461208888');
+INSERT INTO vendedores(nombre, apellido, telefono) VALUES('alberto', 'Perez', '7461208888');
+INSERT INTO vendedores(nombre, apellido, telefono) VALUES('Jorge', 'Perez', '7461208888');
+INSERT INTO vendedores(nombre, apellido, telefono) VALUES('Adolfo', 'Perez', '7461208888');
 
 USE BD_bienesRices;
 CREATE TABLE propiedades(

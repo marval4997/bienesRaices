@@ -1,4 +1,6 @@
 <?php
+
+use App\Propiedad;
 require 'includes/app.php';
 incluirTemplete('header', true);
 

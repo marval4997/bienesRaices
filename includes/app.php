@@ -5,7 +5,7 @@ require __DIR__. '/../vendor/autoload.php';
 
 //Conectanos a la base de datos
 $db= conectarDB();
-use App\ActiveRecord;
+use Model\ActiveRecord;
 //use Intervention\Image\ImageManager as Image;
 
 ActiveRecord::setDB($db);
